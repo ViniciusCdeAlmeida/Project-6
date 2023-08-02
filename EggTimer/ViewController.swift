@@ -10,27 +10,33 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var titleLabel: UILabel!
     let eggTimes = ["Soft":3,"Medium":7,"Hard":12]
-    var secondsRemaning = 60
+
+    
     var timer = Timer()
+    var total = 0
+    var timePassed = 0
     @IBAction func eggBtn(_ sender: UIButton) {
         
         timer.invalidate()
         let hardness = sender.currentTitle!
         
-        secondsRemaning = eggTimes[hardness]!
-        
+        total = eggTimes[hardness]!
+        progressBar.progress = 0.0
+        timePassed = 0
+        titleLabel.text = hardness
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     
     @objc func updateTimer(){
-        if secondsRemaning > 0{
-            secondsRemaning -= 1
+        if timePassed < total{
+            timePassed += 1
+            progressBar.progress = Float(timePassed) / Float(total)
         } else {
             timer.invalidate()
             titleLabel.text = "Done!"
         }
     }
-    
 }
